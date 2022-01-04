@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import logo from '../../assets/logo.svg'
-import { Contai, Container, Content } from './styles';
+import { Contai, Container, Content, TipoDeTransacao, RadioBox} from './styles';
 import Modal from 'react-modal' 
 import closeImg from '../../assets/close.svg'
+import incomeImg from '../../assets/income.svg'
+import outcomeImg from '../../assets/outcome.svg'
 
 
 
 export function Header(){
     const [modalTransac, setModalTransac] = useState(false);
+    const [type, setType] = useState('deposit')
 
     function openModalTransac(){
         setModalTransac(true);
@@ -15,6 +18,7 @@ export function Header(){
     function closeModalTransac(){
         setModalTransac(false);
     }
+
 
     return(
         <Container> 
@@ -43,6 +47,18 @@ export function Header(){
                         type='number'
                         placeholder='Valor'
                     />
+                    <TipoDeTransacao>
+                            <RadioBox  isActive={type ==='deposit'}type='button' onClick={()=>setType('deposit')}>
+                                <img src={incomeImg} alt="seta cima" />
+                                <span>Entrada</span>
+                            </RadioBox>
+                            <RadioBox isActive={type ==='withdraw'} type='button' onClick={()=>setType('withdraw')}>
+                                <img src={outcomeImg} alt="seta baixo" />
+                                <span>Saída</span>
+                            </RadioBox>
+
+
+                    </TipoDeTransacao>
                      <input 
     
                         placeholder='Categoria'
