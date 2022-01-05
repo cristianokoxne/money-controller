@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useContext } from 'react';
 import logo from '../../assets/logo.svg'
 import { Contai, Container, Content, TipoDeTransacao, RadioBox} from './styles';
 import Modal from 'react-modal' 
@@ -6,6 +6,7 @@ import closeImg from '../../assets/close.svg'
 import incomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
 import { api } from '../../services/api';
+import { TransactionContext } from '../../TransactionsContext';
 
 
 
@@ -13,8 +14,9 @@ export function Header(){
     const [modalTransac, setModalTransac] = useState(false);
     const [type, setType] = useState('deposit')
     const [title, setTitle] = useState('');
-    const [value, setValue] = useState(0);
+    const [amount, setAmount] = useState(0);
     const [category, setCategory] = useState('');
+    const {createTransaction} = useContext(TransactionContext)
 
     function openModalTransac(){
         setModalTransac(true);
@@ -22,17 +24,17 @@ export function Header(){
     function closeModalTransac(){
         setModalTransac(false);
     }
-    function createTransation(event: FormEvent){
+    function handleCreateTransation(event: FormEvent){
         event.preventDefault();
 
-        const data ={
+        createTransaction({
             title,
-            value,
+            amount,
             category,
-            type,
-        };
+            type
 
-        api.post('/transactions', data);
+        })
+       
     }
 
     return(
@@ -48,7 +50,7 @@ export function Header(){
                 className="react-modal-content"
             >
                 
-               <Contai onSubmit={createTransation}>
+               <Contai onSubmit={handleCreateTransation}>
                     <button className='button' onClick={closeModalTransac}>
                         <img src={closeImg} alt="fechar" />
                     </button>
@@ -63,8 +65,8 @@ export function Header(){
                      <input 
                         type='number'
                         placeholder='Valor'
-                        value={value}
-                        onChange={event => setValue(Number(event.target.value))}
+                        value={amount}
+                        onChange={event => setAmount(Number(event.target.value))}
                     />
                     <TipoDeTransacao>
                             <RadioBox activeColor = "green" isActive={type ==='deposit'}type='button' onClick={()=>setType('deposit')}>
